@@ -21,14 +21,18 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('admin', 'Admin\AdminController@index');
-Route::resource('admin/roles', 'Admin\RolesController');
-Route::resource('admin/permissions', 'Admin\PermissionsController');
-Route::resource('admin/users', 'Admin\UsersController');
-Route::resource('admin/pages', 'Admin\PagesController');
+Route::get('admin', 'Admin\AdminController@index')->middleware('is_admin')->name('admin');
+Route::resource('admin/roles', 'Admin\RolesController')->middleware('is_admin');
+Route::resource('admin/permissions', 'Admin\PermissionsController')->middleware('is_admin');
+Route::resource('admin/users', 'Admin\UsersController')->middleware('is_admin');
+Route::resource('admin/pages', 'Admin\PagesController')->middleware('is_admin');
 Route::resource('admin/activitylogs', 'Admin\ActivityLogsController')->only([
     'index', 'show', 'destroy'
-]);
-Route::resource('admin/settings', 'Admin\SettingsController');
-Route::get('admin/generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@getGenerator']);
-Route::post('admin/generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@postGenerator']);
+])->middleware('is_admin');
+Route::resource('admin/settings', 'Admin\SettingsController')->middleware('is_admin');
+Route::get('admin/generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@getGenerator'])->middleware('is_admin');
+Route::post('admin/generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@postGenerator'])->middleware('is_admin');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
